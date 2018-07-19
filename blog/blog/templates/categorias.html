@@ -1,0 +1,175 @@
+{% extends 'base_empresa.html' %}
+{% block titulo %}
+URUK - Painel
+{%endblock%}
+{% block breadcrumbone %}
+Categorias
+{%endblock%}
+{% block breadcrumbtwo %}
+Gerencie as categorias
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+<div class="row text-center">
+    <!-- Column -->
+    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+        {% if msg %}<p><strong class="{{ tipo_msg }}">{{ msg }}</strong></p>{% endif %}
+    </div>
+</div>
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <form class="form-horizontal form-material" action="" method="post" id="categoria_form">
+                                    {{form.csrf_token}}
+                                    <div class="form-group">
+                                        <label class="col-md-12">Título</label>
+                                        <div class="col-md-12">
+                                            <input type="number" name="empresa" id="empresa" style="display:none" value={{current_user.id}}>
+                                            {{form.titulo(class="form-control form-control-line", id="titulo")}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="reset" class="btn btn-danger">Limpar</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="button" onclick="submitForm()" class="btn btn-success">Salvar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <h4 class="card-title">Minhas categorias</h4>
+                                <h6 class="card-subtitle">Gerencie suas categorias...</h6>
+                                <div class="table-responsive">
+                                    <table class="table" id="tabela">
+                                        <thead>
+                                            <tr>
+                                                <th>Título</th>
+                                                <th>Editar</th>
+                                                <th>Remover</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <script>
+                var cate_editar = 0;
+                var lista = new Array();
+                function getAllCategorias(){
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", "categoria", false);
+                    xhttp.send();
+                    text = xhttp.responseText
+                    var result = JSON.parse(text); // Resultado em JSON
+                    for(var i = 0; i<=9999; i++){
+                        if(result.categorias[i]==null || result.categorias[i]==''){
+                          break;
+                        }
+                        lista.push(result.categorias[i]);
+                    }
+                }
+
+                function preencher(){
+                  getAllCategorias();
+                  var table = document.getElementById("tabela");
+                  //Limpa os dados anteriores da tabela
+                  $("#tabela td").remove();
+                  for (i=0; i<lista.length; i++) {
+                    var linha = '<tr><td>'+lista[i].titulo+'</td><td><div class="form-group"><div class="col-md-12"><button type="button" class="btn btn-success" onclick="carregar(\''+lista[i].titulo+'\','+lista[i].id+')">Editar</button></div></div></td><td><div class="form-group"><div class="col-md-12"><button type="button" class="btn btn-danger" onclick="remover(\''+lista[i].id+'\')">Remover</button></div></div></td></tr>';
+                    $("#tabela").append(linha);
+                  }
+                }
+
+              function submitForm(){
+                  if(cate_editar==0)
+                    insert();
+                  else if (cate_editar>0) {
+                    update();
+                  }
+              }
+
+              function carregar(titulo, id){
+                  document.getElementById('titulo').value = titulo;
+                  cate_editar = id;
+                  window.scrollTo(0, 0);
+              }
+
+              function insert(){
+                  var obj = { "titulo": document.getElementById('titulo').value, "empresa":  document.getElementById('empresa').value};
+                  var dados = JSON.stringify(obj);
+                  $.ajax({
+                          type: "POST",
+                          url: "/categoria",
+                          data: dados,
+                          success: function(){$("#categoria_form").trigger("reset");},
+                          dataType: "json",
+                          contentType : "application/json"
+                        });
+                        window.location = '/categorias_form';
+                        return false;
+              }
+
+              function update(){
+                  var obj = { "titulo": document.getElementById('titulo').value, "empresa" :document.getElementById('empresa').value};
+                  var dados = JSON.stringify(obj);
+                  $.ajax({
+                          type: "PUT",
+                          url: "/categoria/"+cate_editar,
+                          data: dados,
+                          success: function(){$("#categoria_form").trigger("reset");},
+                          dataType: "json",
+                          contentType : "application/json"
+                        });
+                        window.location = '/categorias_form';
+                        return false;
+              }
+              function remover(id){
+                  var obj = { "id": id, "empresa":  document.getElementById('empresa').value};
+                  var dados = JSON.stringify(obj);
+                  $.ajax({
+                          type: "DELETE",
+                          url: "/categoria/"+id,
+                          data: dados,
+                          success: function(){},
+                          dataType: "json",
+                          contentType : "application/json"
+                        });
+                        window.location = '/categorias_form';
+                        return false;
+              }
+
+                    window.onload = function(){
+                      preencher();
+                    }
+                </script>
+{% endblock %}

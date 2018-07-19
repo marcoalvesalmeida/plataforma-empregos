@@ -1,0 +1,36 @@
+{% extends 'base_externa.html' %}
+{% block titulo %}
+URUK - Início
+{%endblock%}
+{% block breadcrumbone %}
+Acesso Negado
+{%endblock%}
+{% block breadcrumbotwo %}
+Erro 403
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+{% if msg %}<p><strong>{{ msg }}</strong></p>{% endif %}
+
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card text-center">
+                            <div class="card-block">
+                                <h1 class="text-warning">ERRO DESCONHECIDO</h2>
+                                <p>Se você encontrou esse lhe pedimos perdão. Entre em contato com a administração! <a id="anuncio"></a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+
+                <!-- ============================================================== -->
+{% endblock %}

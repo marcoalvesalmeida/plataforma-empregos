@@ -1,0 +1,36 @@
+{% extends 'base_candidato.html' %}
+{% block titulo %}
+URUK - Início
+{%endblock%}
+{% block breadcrumbone %}
+Detalhes do Anúncio
+{%endblock%}
+{% block breadcrumbotwo %}
+Configurações
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+{% if msg %}<p><strong>{{ msg }}</strong></p>{% endif %}
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <h1 class="text-center"> {{current_anuncio.titulo}} </h1>
+                                <h4 class="text-center"> <strong>Publicado em:</strong> {{ current_anuncio.data_pub.strftime('%d/%m/%Y') }} - <strong>Empresa:</strong> {{ current_empresa.nome }} - <strong>Valor:</strong> {{ current_anuncio.valor }} </h4>
+                                <h4 class="text-center"> <strong>Quantidade de vagas:</strong> {{ current_anuncio.qtde_vagas }} - <strong>Jornada:</strong> {{ current_anuncio.jornada }} - <strong>Categoria:</strong> {{ anuncio_categoria }} </h4>
+                                <h4> <strong>Email: </strong> {{ current_empresa.email }} </h4>
+                                <h4> <strong> Descrição: </strong></h4><p> {{current_anuncio.descricao}} </p>
+                            </div>
+                       </div>
+                    </div>
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+{% endblock %}

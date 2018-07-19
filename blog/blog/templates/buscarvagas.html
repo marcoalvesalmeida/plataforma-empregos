@@ -1,0 +1,43 @@
+{% extends 'base_candidato.html' %}
+{% block titulo %}
+URUK - Início
+{%endblock%}
+{% block breadcrumbone %}
+Busque Vagas de Emprego
+{%endblock%}
+{% block breadcrumbotwo %}
+Empregos
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+{% if msg %}<p><strong>{{ msg }}</strong></p>{% endif %}
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                {% for emprego in lista %}
+                  <!-- Row -->
+                  <div class="row">
+                      <!-- Column -->
+                      <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                          <div class="card text-center">
+                              <div class="card-block">
+                                  <h1 class="text-info">{{emprego.titulo }}</h2>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label> <strong>Publicado em: </strong>{{ emprego.data_pub.strftime('%d/%m/%Y')}} - <strong>Empresa: </strong> - <strong>Valor: </strong>{{emprego.valor}} </label>
+                                            <br/><a href="{{ url_for('detalhes') }}?id={{emprego.id}}">
+                                                <button type="button" class="btn btn-info">Ver Detalhes</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- Column -->
+                  </div>
+                  <!-- Row -->
+                {% endfor %}
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+{% endblock %}

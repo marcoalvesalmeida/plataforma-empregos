@@ -1,0 +1,46 @@
+{% extends 'base_externa.html' %}
+{% block titulo %}
+URUK - Início
+{%endblock%}
+{% block breadcrumbone %}
+Conheça
+{%endblock%}
+{% block breadcrumbotwo %}
+Conheça
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+{% if msg %}<p><strong>{{ msg }}</strong></p>{% endif %}
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-6 col-xlg-6 col-md-6">
+                        <div class="card">
+                            <div class="card-block">
+                                <h2>Para Candidatos</h2>
+                                <p>Está a procura de emprego? Encontre vagas nas mais diversas empresas cadastradas em nossa plataforma. Além disso, nos envie seu currículo e nós distribuiremos ele para você.</p>
+                                <a href="#" class="btn waves-effect waves-light btn-info">Eu quero!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-6 col-xlg-6 col-md-6">
+                        <div class="card">
+                            <div class="card-block">
+                                  <h2>Para Empresas</h2>
+                                  <p>Precisa de funcionários capacitados? Encontre os melhores profissionais aqui. Além disso, é possível acessar currículos para escolher o profissional certo para sua empresa.</p>
+                                  <a href="#" class="btn waves-effect waves-light btn-info">Nós queremos!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+{% endblock %}

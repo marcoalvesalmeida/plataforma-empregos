@@ -1,0 +1,178 @@
+{% extends 'base_empresa.html' %}
+{% block titulo %}
+URUK - Painel
+{%endblock%}
+{% block breadcrumbone %}
+Anúncio
+{%endblock%}
+{% block breadcrumbtwo %}
+Editar Anúncio
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+<div class="row text-center">
+    <!-- Column -->
+    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+        {% if msg %}<p><strong class="{{ tipo_msg }}">{{ msg }}</strong></p>{% endif %}
+    </div>
+</div>
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <form class="form-horizontal form-material" action="" method="post" name="anuncio_form">
+                                    {{form.csrf_token}}
+                                    <span style="display:none">{{form.id(class="form-control form-control-line", id="id")}}</span>
+                                    <span style="display:none"><input type="number" style="display:none;" id="empresa" value={{ current_user.id }}></span>
+                                    <div class="form-group">
+                                        <label class="col-md-12" id="ltitulo">Título</label>
+                                        <div class="col-md-12">
+                                             {{form.titulo(class="form-control form-control-line", id="titulo")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Valor</label>
+                                        <div class="col-md-12">
+                                              {{form.valor(class="form-control form-control-line", id="valor")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Quantidade de vagas</label>
+                                        <div class="col-md-12">
+                                              {{form.qtde_vagas(class="form-control form-control-line", id="qtde_vagas")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Descrição</label>
+                                        <div class="col-sm-12">
+                                                <textarea name="descricao" class="form-control form-control-line" id="descricao" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Jornada de Trabalho</label>
+                                        <div class="col-sm-12">
+                                               {{form.jornada(class="form-control form-control-line", id="jornada")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Categoria</label>
+                                        <div class="col-sm-12">
+                                          <select class="form-control form-control-line" name="sanuncio" id="sanuncio">
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-danger" onclick="remover()">Excluir</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-success" onclick="update()">Salvar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <script>
+                  var lista = new Array();
+                  function getOneAnuncio(){
+                      var xhttp = new XMLHttpRequest();
+                      xhttp.open("GET", "anuncio/"+{{current_anuncio}}, false);
+                      xhttp.send();
+                      text = xhttp.responseText
+                      var result = JSON.parse(text); // Resultado em JSON
+                      for(var i = 0; i<=9999; i++){
+                          if(result.anuncios[i]==null || result.anuncios[i]==''){
+                            break;
+                          }
+                          lista.push(result.anuncios[i]);
+                      }
+                  }
+
+                  function preencher(){
+                    getOneAnuncio();
+                    for (i=0; i<lista.length; i++) {
+                      document.getElementById("id").value = lista[i].id;
+                      document.getElementById("titulo").value = lista[i].titulo;
+                      document.getElementById("valor").value = lista[i].valor;
+                      document.getElementById("qtde_vagas").value = lista[i].qtde_vagas;
+                      document.getElementById("descricao").innerHTML = lista[i].descricao;
+                      document.getElementById("jornada").value = lista[i].jornada;
+                      document.getElementById("sanuncio").value = lista[i].categoria;
+                    }
+                  }
+
+                  var lista2 = new Array();
+                  function categoria(){
+                      var xhttp = new XMLHttpRequest();
+                      xhttp.open("GET", "categoria", false);
+                      xhttp.send(); // busca o produto pelo id
+                      text = xhttp.responseText
+                      var result = JSON.parse(text); // Resultado em JSON
+                      for(var i = 0; i<=9999; i++){
+                          if(result.categorias[i]==null || result.categorias[i]==''){
+                            break;
+                          }
+                          lista2.push(result.categorias[i]);
+                      }
+                  }
+
+                  function preencher2(){
+                    categoria();
+                    document.anuncio_form.sanuncio.options.length = lista2.length;
+                    for (i=0; i<lista2.length; i++) {
+                        document.anuncio_form.sanuncio.options[i] = new Option(lista2[i].titulo, lista2[i].id);
+                    }
+                  }
+
+                  function update(){
+                      var obj = {"titulo": document.getElementById('titulo').value, "empresa":  document.getElementById('empresa').value, "valor":  document.getElementById('valor').value, "qtde_vagas":  document.getElementById('qtde_vagas').value, "descricao":  document.getElementById('descricao').value, "jornada" :  document.getElementById('jornada').value, "categoria":  document.getElementById('sanuncio').value};
+                      var dados = JSON.stringify(obj);
+                      $.ajax({
+                              type: "PUT",
+                              url: "/anuncio/"+document.getElementById('id').value,
+                              data: dados,
+                              success: function(){},
+                              dataType: "json",
+                              contentType : "application/json"
+                            });
+                            window.location = '/listar_anuncios';
+                            return false;
+                  }
+
+                  function remover(){
+                      var obj = { "id": id, "empresa":  document.getElementById('empresa').value};
+                      var dados = JSON.stringify(obj);
+                      $.ajax({
+                              type: "DELETE",
+                              url: "/anuncio/"+document.getElementById('id').value,
+                              data: dados,
+                              success: function(){},
+                              dataType: "json",
+                              contentType : "application/json"
+                            });
+                            window.location = '/listar_anuncios';
+                            return false;
+                  }
+
+
+                  window.onload = function(){
+                    preencher2();
+                    preencher();
+                  }
+                </script>
+{% endblock %}

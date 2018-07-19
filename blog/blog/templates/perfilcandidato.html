@@ -1,0 +1,153 @@
+{% extends 'base_candidato.html' %}
+{% block titulo %}
+URUK - Perfil
+{%endblock%}
+{% block breadcrumbone %}
+Minhas Informações
+{%endblock%}
+{% block breadcrumbtwo %}
+Perfil
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+<div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2 text-center">
+    {% if msg %}<p><strong class="{{tipo_msg}}">{{ msg }}</strong></p>{% endif %}
+</div>
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <form class="form-horizontal form-material" action="" method="POST" name="candidato_form">
+                                    {{form.csrf_token}}
+                                    <span style="display:none"><input type="number" style="display:none;" id="id" value={{ current_user.id }}></span>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Nome Completo *</label>
+                                        <div class="col-md-12">
+                                             {{form.nome(class="form-control form-control-line", id="nome")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">CPF</label>
+                                        <div class="col-md-12">
+                                             {{form.cpf(class="form-control form-control-line", id="cpf")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Email *</label>
+                                        <div class="col-md-12">
+                                              {{form.email(class="form-control form-control-line", id="email", type="email")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Senha *</label>
+                                        <div class="col-md-12">
+                                               {{form.senha(class="form-control form-control-line", id="senha")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Bio</label>
+                                        <div class="col-md-12">
+                                               <textarea class="form-control form-control-line" id="bio" name="bio"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                          <label class="col-md-12">Data de Nascimento</label>
+                                          <div class="col-md-12">
+                                                 {{form.data_nascimento(class="form-control form-control-line", id="data_nascimento", type="date")}}
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-12">Sexo</label>
+                                          <div class="col-md-12">
+                                                 {{form.sexo(class="form-control form-control-line", id="sexo")}}
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-12">Estado Cívil</label>
+                                          <div class="col-md-12">
+                                                 {{form.estado_civil(class="form-control form-control-line", id="estado_civil")}}
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-md-12">Escolaridade *</label>
+                                          <div class="col-md-12">
+                                                 {{form.escolaridade(class="form-control form-control-line", id="escolaridade")}}
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <button type="reset" class="btn btn-danger">Limpar</button>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <button type="button" class="btn btn-success" onclick="update()">Salvar</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <script>
+                  function update(){
+                    var obj = {  "data_nascimento" : document.getElementById("data_nascimento").value, "nome": document.getElementById('nome').value, "cpf":  document.getElementById('cpf').value, "email" : document.getElementById("email").value, "senha" : document.getElementById("senha").value, "bio" : document.getElementById("bio").value, "escolaridade" : document.getElementById("escolaridade").value, "sexo" : document.getElementById("sexo").value, "estado_civil" : document.getElementById("estado_civil").value };
+                    var dados = JSON.stringify(obj);
+                    $.ajax({
+                              type: "PUT",
+                              url: "/candidato/"+document.getElementById('id').value,
+                              data: dados,
+                              success: function(){},
+                              dataType: "json",
+                              contentType : "application/json"
+                            });
+                            window.location = '/perfil';
+                            return false;
+                  }
+
+                  var lista = new Array();
+                  function candidato(){
+                      var xhttp = new XMLHttpRequest();
+                      xhttp.open("GET", "candidato/"+{{current_user.id}}, false);
+                      xhttp.send();
+                      text = xhttp.responseText
+                      var result = JSON.parse(text); // Resultado em JSON
+                      for(var i = 0; i<=9999; i++){
+                          if(result.candidato[i]==null || result.candidato[i]==''){
+                            break;
+                          }
+                          lista.push(result.candidato[i]);
+                      }
+                  }
+
+                  function preencher(){
+                      candidato();
+                      for (i=0; i<lista.length; i++) {
+                        document.getElementById("nome").value = lista[i].nome;
+                        document.getElementById("cpf").value = lista[i].cpf;
+                        document.getElementById("email").value = lista[i].email;
+                        document.getElementById("bio").value = lista[i].bio;
+                        document.getElementById("estado_civil").value = lista[i].estado_civil;
+                        document.getElementById("sexo").value = lista[i].sexo;
+                        document.getElementById("escolaridade").value = lista[i].escolaridade;
+                        document.getElementById("data_nascimento").value = lista[i].data_nascimento;
+                      }
+                  }
+                  window.onload = function(){
+                    preencher();
+                  }
+
+                </script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base_empresa.html' %}
+{% block titulo %}
+URUK - Início
+{%endblock%}
+{% block breadcrumbone %}
+Detalhes do Curriculo
+{%endblock%}
+{% block breadcrumbotwo %}
+Curriculo
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+{% if msg %}<p><strong>{{ msg }}</strong></p>{% endif %}
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <h1 class="text-center"> Currículo #{{current_curriculo.id}} </h1>
+                                <h3><strong> Informações Básicas:</strong> </h3>
+                                <h4> <strong>Nome:</strong> {{ current_candidato.nome }} </h4>
+                                <h4> <strong>CPF:</strong> {{ current_candidato.cpf }} </h4>
+                                <h4> <strong>Sexo:</strong> {{ current_candidato.sexo.value }} </h4>
+                                <h4> <strong>Data de Nascimento:</strong> {{ current_candidato.data_nascimento.strftime('%d/%m/%Y')}} </h4>
+                                <h4> <strong>Estado Cívil:</strong> {{current_candidato.estado_civil.value}} </h4><br/>
+                                <h3> <strong>Contato:</strong> </h3>
+                                <h4> <strong>Email:</strong> {{ current_candidato.email }} </h4><br/>
+                                <h3> <strong>Histórico Acadêmico</strong> </h3>
+                                <h4> <strong>Grau Acadêmico:</strong> {{current_candidato.escolaridade.value}}</h4>
+                                <h4> <strong>Formação:</strong> {{current_curriculo.formacao_academica}}</h4>
+                                <h4> <strong>Formação Complementar:</strong> {{current_curriculo.cursos_realizados}}</h4><br/>
+                                <h3> <strong>Histórico Profissional </strong></h3>
+                                <h4> <strong>Experiência:</strong> {{current_curriculo.experiencia_profissional}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+{% endblock %}

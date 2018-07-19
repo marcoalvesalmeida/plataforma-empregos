@@ -1,0 +1,162 @@
+{% extends 'base_candidato.html' %}
+{% block titulo %}
+URUK - Painel
+{%endblock%}
+{% block perfil %}
+{%endblock%}
+{% block breadcrumbone %}
+Publique seu currículo
+{%endblock%}
+{% block breadcrumbtwo %}
+Painel
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+<div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2 text-center">
+    {% if msg %}<p><strong class="{{tipo_msg}}">{{ msg }}</strong></p>{% endif %}
+</div>
+<!-- ============================================================== -->
+  <!-- Start Page Content -->
+  <!-- ============================================================== -->
+  <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <form class="form-horizontal form-material" action="" method="POST">
+                                    {{form.csrf_token}}
+                                    <div class="form-group">
+                                        <label class="col-md-12">Maior Titulação Acadêmica</label>
+                                        <div class="col-md-12">
+                                             {{form.formacao_academica(class="form-control form-control-line", id="formacao_academica")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Cursos Realizados</label>
+                                        <div class="col-md-12">
+                                             <textarea name="cursos_realizados" class="form-control form-control-line" id="cursos_realizados" rows="4"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Experiência Profissional</label>
+                                        <div class="col-md-12">
+                                          <textarea name="experiencia_profissional" class="form-control form-control-line" id="experiencia_profissional" rows="4"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                          <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <button type="reset" class="btn btn-danger">Limpar</button>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <div class="col-md-12">
+                                                  <button type="button" class="btn btn-success" onclick="update()">Salvar</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <h1> Seu currículo atual </h1>
+                                <h3><strong> Informações Básicas:</strong> </h3>
+                                <h4> <strong>Nome: </strong><span id="nome"></span></h4>
+                                <h4> <strong>CPF: </strong><span id="cpf"></span></h4>
+                                <h4> <strong>Sexo: </strong><span id="sexo"></span></h4>
+                                <h4> <strong>Data de Nascimento: </strong><span id="data_nascimento"></span></h4>
+                                <h4> <strong>Estado Cívil: </strong><span id="estado_civil"></span></h4><br/>
+                                <h4> <strong>Bio: </strong><span id="bio"></span></h4><br/>
+                                <h3> <strong>Contato: </strong><span id="contato"></span></h3>
+                                <h4> <strong>Email: </strong><span id="email"></span></h4><br/>
+                                <h3> <strong>Histórico Acadêmico</strong></h3>
+                                <h4> <strong>Grau Acadêmico: </strong><span id="escolaridade"></span></h4>
+                                <h4> <strong>Formação: </strong><span id="formacao_academica2"></span></h4>
+                                <h4> <strong>Formação Complementar: </strong><span id="cursos_realizados2"></span></h4><br/>
+                                <h3> <strong>Histórico Profissional </strong></h3>
+                                <h4> <strong>Experiência: </strong><span id="experiencia_profissional2"></span></h4>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                  <a href="{{url_for('mudar_status_curriculo')}}">
+                                  {% if current_curriculo.publico %}
+                                    <button type="submit" class="btn btn-success">Tornar Privado</button>
+                                  {% else %}
+                                    <button type="submit" class="btn btn-success">Tornar Público</button>
+                                  {% endif %}
+                                  </a>
+                                </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <script>
+                  function update(){
+                    var obj = {"formacao_academica" : document.getElementById("formacao_academica").value, "cursos_realizados": document.getElementById('cursos_realizados').value, "experiencia_profissional":  document.getElementById('experiencia_profissional').value };
+                    var dados = JSON.stringify(obj);
+                    console.log(dados);
+                    $.ajax({
+                              type: "PUT",
+                              url: "/curriculo/"+{{current_user.id}},
+                              data: dados,
+                              success: function(){},
+                              dataType: "json",
+                              contentType : "application/json"
+                            });
+                            window.location = '/painel_candidato';
+                            return false;
+                  }
+
+                  var lista = new Array();
+                  function curriculo(){
+                      var xhttp = new XMLHttpRequest();
+                      xhttp.open("GET", "curriculo/"+{{current_user.id}}, false);
+                      xhttp.send();
+                      text = xhttp.responseText
+                      var result = JSON.parse(text);
+                      for(var i = 0; i<=9999; i++){
+                          if(result.curriculo[i]==null || result.curriculo[i]==''){
+                            break;
+                          }
+                          lista.push(result.curriculo[i]);
+                      }
+                  }
+
+                  function preencher(){
+                      curriculo();
+                      for (i=0; i<lista.length; i++) {
+                        document.getElementById("formacao_academica").value = lista[i].formacao_academica;
+                        document.getElementById("cursos_realizados").value = lista[i].cursos_realizados;
+                        document.getElementById("experiencia_profissional").value = lista[i].experiencia_profissional;
+                        document.getElementById("formacao_academica2").innerHTML = lista[i].formacao_academica;
+                        document.getElementById("cursos_realizados2").innerHTML = lista[i].cursos_realizados;
+                        document.getElementById("experiencia_profissional2").innerHTML = lista[i].experiencia_profissional;
+                        document.getElementById("nome").innerHTML = lista[i].nome;
+                        document.getElementById("cpf").innerHTML = lista[i].cpf;
+                        document.getElementById("sexo").innerHTML = lista[i].sexo;
+                        document.getElementById("data_nascimento").innerHTML = lista[i].data_nascimento;
+                        document.getElementById("email").innerHTML = lista[i].email;
+                        document.getElementById("bio").innerHTML = lista[i].bio;
+                        //document.getElementById("estado_civil").innerHTML = lista[i].estado_civil;
+                        document.getElementById("escolaridade").innerHTML = lista[i].escolaridade;
+                    }
+                  }
+                  window.onload = function(){
+                    preencher();
+                  }
+
+                </script>
+{% endblock %}

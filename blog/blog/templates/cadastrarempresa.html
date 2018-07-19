@@ -1,0 +1,101 @@
+{% extends 'base_externa.html' %}
+{% block titulo %}
+URUK - Para Empresas
+{%endblock%}
+{% block breadcrumbone %}
+Para Empresas
+{%endblock%}
+{% block breadcrumbtwo %}
+Cadastro
+{%endblock%}
+{% block conteudo %}
+<!-- Caso um erro seja lançado, imprime o texto do erro em negrito, tag <strong> -->
+<div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+    {% if msg %}<p><strong class="{{tipo_msg}}">{{ msg }}</strong></p>{% endif %}
+</div>
+<!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-8 offset-lg-2 col-xlg-9 offset-xlg-2 col-md-7 offset-md-2">
+                        <div class="card">
+                            <div class="card-block">
+                                <form class="form-horizontal form-material" action="" method="POST">
+                                    {{form.csrf_token}}
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Nome *</label>
+                                        <div class="col-md-12">
+                                            {{form.nome(class="form-control form-control-line", id="nome")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">CNPJ</label>
+                                        <div class="col-md-12">
+                                            {{form.cnpj(class="form-control form-control-line", id="cnpj")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Email *</label>
+                                        <div class="col-md-12">
+                                            {{form.email(class="form-control form-control-line", id="email", type="email")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Senha *</label>
+                                        <div class="col-md-12">
+                                            {{form.senha(class="form-control form-control-line", id="senha")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Descrição</label>
+                                        <div class="col-md-12">
+                                            {{form.descricao(class="form-control form-control-line", id="descricao")}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                          <label class="col-md-12">Website</label>
+                                          <div class="col-md-12">
+                                                 {{form.website(class="form-control form-control-line", id="website", type="url")}}
+                                          </div>
+                                      </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="reset" class="btn btn-danger">Limpar</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-success" onclick="insert()">Salvar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <script>
+                  function insert(){
+                    var obj = {"nome" : document.getElementById("nome").value, "email": document.getElementById('email').value, "senha": document.getElementById('senha').value, "cnpj":  document.getElementById('cnpj').value, "descricao" : document.getElementById("descricao").value, "website" : document.getElementById("website").value };
+                    var dados = JSON.stringify(obj);
+                    $.ajax({
+                              type: "POST",
+                              url: "/empresa",
+                              data: dados,
+                              success: function(){},
+                              dataType: "json",
+                              contentType : "application/json"
+                            });
+                            window.location = '/login';
+                            return false;
+                  }
+                </script>
+{% endblock %}
